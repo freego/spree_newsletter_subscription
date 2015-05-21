@@ -1,0 +1,9 @@
+<%= form_for :newsletter_subscription, url: newsletter_subscriptions_path,
+             remote: true , html: { id: 'newsletter-subscription' } do |f| %>
+
+  <%= f.hidden_field :locale, value: I18n.locale %>
+  <%= f.email_field :email %>
+  <%= f.check_box :terms %>
+  <%= button_tag :submit %>
+
+<% end %>

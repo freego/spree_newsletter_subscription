@@ -1,0 +1,9 @@
+$('div#newsletter-subscription-errors').remove();
+
+<% if @success %>
+  content = '<%= Spree.t(:success_html, scope: :newsletter_subscription) %>'
+  $('#newsletter-subscription.submitted').hide().html(content).fadeIn(400);
+<% else %>
+  content = '<div id="newsletter-subscription-errors"><%= raw @subscription.errors.full_messages.join("<br>") %></div>'
+  $('#newsletter-subscription.submitted').before(content);
+<% end %>

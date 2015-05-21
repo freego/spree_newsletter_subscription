@@ -1,0 +1,8 @@
+it:
+  activemodel:
+    attributes:
+      spree/newsletter_subscription:
+        terms: Termini e Condizioni
+  spree:
+    newsletter_subscription:
+      success_html: <h3>Sei stato iscritto alla nostra newsletter!</h3>
