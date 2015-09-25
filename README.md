@@ -2,7 +2,8 @@ SpreeNewsletterSubscription
 ===========================
 
 Allow simple newsletter subscription on Spree stores.
-Uses mailchimp.
+
+Supports Mailchimp and Mailup.
 
 Installation
 ------------
@@ -11,6 +12,17 @@ Add spree_newsletter_subscription to your Gemfile:
 
 ```ruby
 gem 'spree_newsletter_subscription'
+```
+
+Then for Mailchimp:
+
+```ruby
+gem 'mailchimp-api', '~> 2.0.6'
+```
+
+or for Mailup:
+```ruby
+gem 'mailup', '~> 1.2.0'
 ```
 
 Bundle your dependencies and run the installation generator:
@@ -23,24 +35,48 @@ bundle exec rails g spree_newsletter_subscription:install
 Configuration
 -------------
 
-Add your credentials to `config/initializers/spree.rb`:
+Add your configuration to `config/initializers/spree.rb`:
+
+Mailchimp example:
 
 ```ruby
 SpreeNewsletterSubscription::Config.tap do |config|
-  config.api_key = {
-    default: 'xxxxxxxxxxxxx-us9',
-  }
-
-  config.list_id = {
-    default: 'xxxxxxxxx',
-    en: 'yyyyyyyy' # use a different list for locale == :en
+  config.provider = 'mailchimp'
+  config.provider_config = {
+    api_key: 'xxxxxxxxxxxxx-us9',
+    list_id: 'xxxxxxxxx'
   }
 end
 ```
 
-You can have different list ids (and even api keys) for each locale.
-If missing, default is always used.
+Mailup example:
 
+```ruby
+SpreeNewsletterSubscription::Config.tap do |config|
+  config.provider = 'mailup'
+  config.provider_config = {
+    client_id: 'xxxxxxxxx',
+    client_secret: 'xxxxxxxxx',
+    username: 'xxxxxxxxx',
+    password: 'xxxxxxxxx',
+    list_id: 'xxxxxxxxx'
+  }
+end
+```
+
+You can have different config values for each locale.
+If missing, the default is always used.
+For example:
+
+```ruby
+SpreeNewsletterSubscription::Config.tap do |config|
+  config.provider_config = {
+    list_id: 'xxxxxxxxx',
+    en: {
+      list_id: 'yyyyyyyy' # use a different value, only for locale :en
+    }
+  }
+end
 
 Testing
 -------

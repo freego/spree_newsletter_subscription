@@ -1,35 +1,23 @@
-require 'mailchimp'
+begin
+  require 'mailchimp'
+rescue LoadError => e
+  raise unless e.message =~ /mailchimp/
+  friendly_ex = e.exception('please install the mailchimp-api gem first!')
+  friendly_ex.set_backtrace(e.backtrace)
+  raise friendly_ex
+end
 
 module SpreeNewsletterSubscription
-  class MailchimpSubscriber
-    def initialize(email, locale = nil)
-      @email = email
-      @locale = locale
-      @list = get_config(:list_id)
-      @mailchimp = Mailchimp::API.new(get_config(:api_key))
-      @logger = Logger.new(Rails.root.join('log/newsletter_subscription.log'))
-    end
-
-    def subscribe!
-      @logger.debug("#subscribe!(#{@email})")
-      begin
-        result = @mailchimp.lists.subscribe(@list, { email: @email })
-        { success: true }
-      rescue Exception => e
-        @logger.debug(e.message)
-        { success: false, error: e.message }
-      end
-    end
+  class MailchimpSubscriber < BaseSubscriber
 
     private
 
-    def config
-      @config ||= SpreeNewsletterSubscription::Config
+    def client
+      Mailchimp::API.new(get_config(:api_key))
     end
 
-    def get_config(key)
-      conf = config[key][@locale.to_sym] if @locale
-      conf ||= config[key][:default]
+    def subscribe_recipient!
+      client.lists.subscribe(@list, { email: @email })
     end
   end
 end

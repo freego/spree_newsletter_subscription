@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version     = '3.0.0'
   s.summary     = 'Allow newsletter subscription on Spree stores.'
   s.description = s.summary
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 2.0.0'
 
   s.author    = 'Alessandro Lepore'
   s.email     = 'a.lepore@freegoweb.it'
@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.requirements << 'none'
 
   s.add_dependency 'spree_core', '~> 3.0.0'
-  s.add_dependency 'mailchimp-api', '~> 2.0.6'
 
   s.add_development_dependency 'capybara', '~> 2.4'
   s.add_development_dependency 'coffee-rails'
