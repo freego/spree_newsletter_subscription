@@ -78,6 +78,7 @@ SpreeNewsletterSubscription::Config.tap do |config|
     }
   }
 end
+```
 
 Testing
 -------
