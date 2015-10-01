@@ -43,8 +43,14 @@ module SpreeNewsletterSubscription
     end
 
     def subscribe_recipient!
+      # create or retrieve recipient from email
       recipient_id = client.console.list(get_config(:list_id)).import_recipient(recipient)
+      # subscribe to list
       client.console.list(get_config(:list_id)).subscribe(recipient_id)
+      # subscribe to group, if present
+      if group_id = get_config(:group_id).presence
+        client.console.group(group_id).subscribe(recipient_id)
+      end
     end
 
   end

@@ -59,7 +59,8 @@ SpreeNewsletterSubscription::Config.tap do |config|
     client_secret: 'xxxxxxxxx',
     username: 'xxxxxxxxx',
     password: 'xxxxxxxxx',
-    list_id: 'xxxxxxxxx'
+    list_id: 'xxxxxxxxx',
+    group_id: 'xxxx' # optional
   }
 end
 ```
