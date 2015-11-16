@@ -10,12 +10,23 @@ end
 module SpreeNewsletterSubscription
   class MailupSubscriber < BaseSubscriber
 
+    def subscribe_recipient!
+      # create or update recipient from email
+      recipient_id = client.console.list(get_config(:list_id)).import_recipient(recipient)
+      # subscribe to list
+      client.console.list(get_config(:list_id)).subscribe(recipient_id)
+      # subscribe to group, if present
+      if group_id = get_config(:group_id).presence
+        client.console.group(group_id).subscribe(recipient_id)
+      end
+    end
+
     private
 
     def client
-      @client ||= MailUp::API.new({ client_id: get_config(:client_id),
-                                    client_secret: get_config(:client_secret),
-                                    oauth: oauth_token })
+      @client ||= MailUp::API.new(client_id: get_config(:client_id),
+                                  client_secret: get_config(:client_secret),
+                                  oauth: oauth_token)
     end
 
     def oauth_client
@@ -37,20 +48,10 @@ module SpreeNewsletterSubscription
 
     def recipient
       {
-        Email: @email,
-        Name: @email
+        Email: @attributes[:email],
+        Name: @attributes[:email],
+        Fields: []
       }
-    end
-
-    def subscribe_recipient!
-      # create or retrieve recipient from email
-      recipient_id = client.console.list(get_config(:list_id)).import_recipient(recipient)
-      # subscribe to list
-      client.console.list(get_config(:list_id)).subscribe(recipient_id)
-      # subscribe to group, if present
-      if group_id = get_config(:group_id).presence
-        client.console.group(group_id).subscribe(recipient_id)
-      end
     end
 
   end

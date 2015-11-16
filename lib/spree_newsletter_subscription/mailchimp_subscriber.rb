@@ -16,8 +16,14 @@ module SpreeNewsletterSubscription
       Mailchimp::API.new(get_config(:api_key))
     end
 
+    def recipient
+      {
+        email: @attributes[:email]
+      }
+    end
+
     def subscribe_recipient!
-      client.lists.subscribe(@list, { email: @email })
+      client.lists.subscribe(get_config(:list), recipient)
     end
   end
 end

@@ -1,12 +1,11 @@
 module SpreeNewsletterSubscription
   class BaseSubscriber
-    def initialize(email, locale = nil)
-      @email = email
-      @locale = locale
+    def initialize(attributes, locale = nil)
+      @attributes = attributes
     end
 
     def subscribe!
-      logger.debug("#subscribe!(#{@email})")
+      logger.debug("#subscribe!(#{@attributes[:email]})")
       begin
         subscribe_recipient!
         { success: true }
@@ -23,8 +22,9 @@ module SpreeNewsletterSubscription
     end
 
     def get_config(key)
-      conf = if @locale && config[@locale.to_sym]
-        config[@locale.to_sym][key]
+      locale = @attributes[:locale]
+      conf = if locale.present? && config[locale.to_sym]
+        config[locale.to_sym][key]
       end
 
       conf ||= config[key]

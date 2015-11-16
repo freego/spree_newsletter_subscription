@@ -1,33 +1,35 @@
 module Spree
   class NewsletterSubscription
     extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    extend ActiveModel::Translation
 
-    attr_accessor :email, :terms, :locale
-
-    validates :email, presence: true
-    validates :terms, presence: true, acceptance: true
+    attr_reader :errors
 
     def initialize(attributes = {})
-      attributes.each do |name, value|
-        send("#{name}=", value)
-      end
+      @attributes = attributes
+      @errors = ActiveModel::Errors.new(self)
     end
 
     def save!
-      return unless valid?
+      return false unless validate!
 
-      result = provider.new(email, locale).subscribe!
-      if !result[:success] && result[:error].present?
-        errors.add(:base, result[:error])
-      end
-
+      result = provider.new(@attributes).subscribe!
+      errors.add(:base, result[:error]) unless result[:success]
       result[:success]
     end
 
-    def persisted?
-      false
+    def read_attribute_for_validation(attr)
+      send(attr)
+    end
+
+    def validate!
+      if @attributes[:email].blank?
+        errors.add(:email, I18n.t("spree.newsletter_subscription.validations.missing"))
+      end
+      if @attributes[:terms] != '1'
+        errors.add(:terms, I18n.t("spree.newsletter_subscription.validations.must_accept"))
+      end
+      errors.none?
     end
 
     private

@@ -2,7 +2,11 @@ it:
   activemodel:
     attributes:
       spree/newsletter_subscription:
+        email: Email
         terms: Termini e Condizioni
   spree:
     newsletter_subscription:
       success_html: <h3>Sei stato iscritto alla nostra newsletter!</h3>
+      validations:
+        missing: deve essere presente
+        must_accept: devono essere accettati

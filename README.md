@@ -97,4 +97,4 @@ Simply add this require statement to your spec_helper:
 require 'spree_newsletter_subscription/factories'
 ```
 
-Copyright (c) 2014 Alessandro Lepore, released under the New BSD License
+Copyright (c) 2015 Alessandro Lepore, released under the New BSD License
