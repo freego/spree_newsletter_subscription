@@ -48,8 +48,8 @@ module SpreeNewsletterSubscription
 
     def recipient
       {
-        Email: @attributes[:email],
-        Name: @attributes[:email],
+        Email: @attributes[:email].strip,
+        Name: @attributes[:email].strip,
         Fields: []
       }
     end
