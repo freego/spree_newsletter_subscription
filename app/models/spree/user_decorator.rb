@@ -1,18 +1,16 @@
 Spree.user_class.class_eval do
-
   # example method
   def subscribe_to_newsletter!
-    if id_changed? || subscribed_to_mailing_list_changed?
-      if subscribed_to_mailing_list
-        Spree::NewsletterSubscription.new(newsletter_params).save!
-      else
-        # TODO unsubscribe?
-      end
+    if subscribed_to_mailing_list
+      NewsletterSubscriptionJob.perform_later(newsletter_params)
+    else
+      # TODO unsubscribe?
     end
   end
 
   private
 
+  # override to send more data to the provider
   def newsletter_params
     {
       email: email,
